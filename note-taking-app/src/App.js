@@ -7,6 +7,8 @@ function App() {
       {id:1, title: "Note 1"},
       {id:2, title: "Note 2"}
    ]);
+   const [edit, setEdit]=useState(false);
+   const [editable,setEditable]=useState(null);
 
    const changeNoteHandler=(e)=>{
       setNote(e.target.value);
@@ -17,6 +19,10 @@ function App() {
       if(note.trim()===""){
          return alert(`Please provide a valid note`);
       }
+      edit? editHandler():createHandler();
+   }
+
+   const createHandler=()=>{
       const newNote={
          id:Date.now()+"",
          title:note,
@@ -25,9 +31,27 @@ function App() {
       setNote("");
    }
 
+   const editHandler=()=>{
+      const updatedNotes=notes.map((snote)=>{
+         if(snote.id===editable.id){
+            return {...snote, title:note}
+         }
+         return snote;
+      });
+      setNotes(updatedNotes);
+      setNote('');
+      setEdit(false);
+   }
+
    const deleteHandler=(id)=>{
       const updatedNotes=notes.filter((note)=>note.id!==id);
       setNotes(updatedNotes);
+   }
+
+   const updateHandler=(note)=>{
+      setEdit(true);
+      setEditable(note);
+      setNote(note.title);
    }
 
   return (
@@ -38,7 +62,7 @@ function App() {
          value={note}
          onChange={changeNoteHandler}
          />
-         <button type="submit">Add Note</button>
+         <button type="submit">{edit?"Edit Note":"Add Note"}</button>
       </form>
       <h2>All Notes</h2>
       <div>
@@ -46,7 +70,7 @@ function App() {
             <>
             <li key={singleNote.id}>
                {singleNote.title}
-               <button>Update</button>
+               <button onClick={()=> updateHandler(singleNote)}>Update</button>
                <button onClick={()=> deleteHandler(singleNote.id)}>Delete</button>
             </li>
             </>
