@@ -25,6 +25,11 @@ function App() {
       setNote("");
    }
 
+   const deleteHandler=(id)=>{
+      const updatedNotes=notes.filter((note)=>note.id!==id);
+      setNotes(updatedNotes);
+   }
+
   return (
     <div className="App">
       <form onSubmit={submitHandler}>
@@ -42,7 +47,7 @@ function App() {
             <li key={singleNote.id}>
                {singleNote.title}
                <button>Update</button>
-               <button>Delete</button>
+               <button onClick={()=> deleteHandler(singleNote.id)}>Delete</button>
             </li>
             </>
             ))}
