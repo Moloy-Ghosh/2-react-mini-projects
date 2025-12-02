@@ -55,6 +55,42 @@ function App() {
       setStudents(updatedStudentList);
    };
 
+   const presentHandler=(std)=>{
+      if(std.isPresent!==undefined){
+         return alert(`already in the ${std.isPresent===true?`present`:`absent`} list`)
+      }
+      const updatedStudentList= students.map((item)=>{
+         if(item.id===std.id){
+            return {...item, isPresent:true};
+         }
+         return item;
+      });
+      setStudents(updatedStudentList);
+   }
+
+   const absentHandler=(std)=>{
+      if(std.isPresent!==undefined){
+         return alert(`already in the ${std.isPresent===true?"present":"absent"} list`)
+      }
+      const updatedStudentList= students.map((item)=>{
+         if(item.id===std.id){
+            return {...item, isPresent:false};
+         }
+         return item;
+      });
+      setStudents(updatedStudentList);
+   }
+
+   const toggleList=(std)=>{
+      const updatedStudentList= students.map((item)=>{
+         if(item.id===std.id){
+            return {...item, isPresent: !item.isPresent};
+         }
+         return item;
+      });
+      setStudents(updatedStudentList);
+   }
+
    const changeNameHandler=(e)=>{
       setStudentName(e.target.value);
    }
@@ -74,17 +110,33 @@ function App() {
                      <span>{student.name}</span>
                      <button onClick={()=>editHandler(student)}>Edit</button>
                      <button onClick={()=>removeHandler(student.id)}>Delete</button>
-                     <button>Make Present</button>
-                     <button>Make Absent</button>
+                     <button onClick={()=>presentHandler(student)}>Make Present</button>
+                     <button onClick={()=>absentHandler(student)}>Make Absent</button>
                   </li>   
                ))}
             </ul>
          </div>
          <div className="list present-students">
             <h2>Present Students</h2>
+            <ul>
+               {students.filter((item)=>item.isPresent===true).map((student)=>(
+                  <li key={student.id}>
+                     {student.name}
+                     <button onClick={()=>toggleList(student)}>Accidently Added</button>
+                  </li>
+                  ))}
+            </ul>
          </div>
          <div className="list absent-students">
             <h2>Absent Students</h2>
+            <ul>
+               {students.filter((item)=>item.isPresent===false).map((student)=>(
+                  <li key={student.id}>
+                     {student.name}
+                     <button onClick={()=>toggleList(student)}>Accidently Added</button>
+                  </li>
+                  ))}
+            </ul>
          </div>
       </div>
     </div>
